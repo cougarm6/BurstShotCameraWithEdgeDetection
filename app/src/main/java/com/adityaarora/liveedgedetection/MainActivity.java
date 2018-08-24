@@ -26,6 +26,7 @@ public class  MainActivity extends AppCompatActivity {
 
     private void startScan() {
         Intent intent = new Intent(this, ScanActivity.class);
+        intent.putExtra(ScanActivity.BUNDLE_KEY_MAX_PICS,5);
         startActivityForResult(intent, REQUEST_CODE);
     }
 

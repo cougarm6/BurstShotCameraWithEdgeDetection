@@ -226,7 +226,7 @@ public class ScanSurfaceView extends FrameLayout implements SurfaceHolder.Callba
 
         if (imgDetectionPropsObj.isDetectedAreaBeyondLimits()) {
             scanHint = ScanHint.FIND_RECT;
-            cancelAutoCapture();
+//            cancelAutoCapture();
         } else if (imgDetectionPropsObj.isDetectedAreaBelowLimits()) {
             cancelAutoCapture();
             if (imgDetectionPropsObj.isEdgeTouching()) {
@@ -256,11 +256,12 @@ public class ScanSurfaceView extends FrameLayout implements SurfaceHolder.Callba
                 iScanner.clearAndInvalidateCanvas();
 
                 if (!isAutoCaptureScheduled) {
-//                    scheduleAutoCapture(scanHint);
-                    autoCapture(scanHint);
+                    scheduleAutoCapture(scanHint);
+//                    autoCapture(scanHint);
                 }
             }
         }
+        Log.e(TAG, "ScanHint: " + scanHint);
         Log.i(TAG, "Preview Area 95%: " + 0.95 * previewArea +
                 " Preview Area 20%: " + 0.20 * previewArea +
                 " Area: " + String.valueOf(area) +
@@ -278,18 +279,11 @@ public class ScanSurfaceView extends FrameLayout implements SurfaceHolder.Callba
         Log.e("debug","scheduleAutoCapture");
         isAutoCaptureScheduled = true;
         secondsLeft = 0;
-        autoCaptureTimer = new CountDownTimer(500, 100) {
+        autoCaptureTimer = new CountDownTimer(2000, 500) {
             public void onTick(long millisUntilFinished) {
-                if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
-                    secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
-                }
-                Log.v(TAG, "" + millisUntilFinished / 1000);
-                switch (secondsLeft) {
-                    case 1:
-                        autoCapture(scanHint);
-                        break;
-                    default:
-                        break;
+                Log.e(TAG, "millisUntilFinished : " + millisUntilFinished);
+                if(millisUntilFinished > 500){
+                    autoCapture(scanHint);
                 }
             }
 
@@ -319,10 +313,13 @@ public class ScanSurfaceView extends FrameLayout implements SurfaceHolder.Callba
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else{
+            Log.e(TAG,"cancelled auto capture as hint not same");
         }
     }
 
     private void cancelAutoCapture() {
+        Log.e(TAG,"cancelled auto capture");
         if (isAutoCaptureScheduled) {
             isAutoCaptureScheduled = false;
             if (null != autoCaptureTimer) {

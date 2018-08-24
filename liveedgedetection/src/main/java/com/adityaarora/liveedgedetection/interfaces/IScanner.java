@@ -13,4 +13,5 @@ public interface IScanner {
     void clearAndInvalidateCanvas();
     void invalidateCanvas();
     void onPictureClicked(Bitmap bitmap);
+    boolean isAutoScanOn();
 }
